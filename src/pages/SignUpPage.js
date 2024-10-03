@@ -14,36 +14,13 @@ import { object } from 'prop-types';
 import { toast } from 'react-toastify';
 import {createUserWithEmailAndPassword, updateProfile} from "firebase/auth"
 import { auth, db } from 'firebase-app/firebase-config';
-import { useNavigate } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
 import { addDoc, collection } from 'firebase/firestore';
+import AuthenticationPage from './AuthenticationPage';
 
 const SignUpPageStyle = styled.div`
     min-height: 100vh;
     padding: 40px;
-    .logo{
-        margin: 0 auto 20px;
-        font-size: 18px;
-        width: 180px;
-        height: 200px;
-    }
-    .heading{
-        text-align: center;
-        color: ${props => props.theme.primary};
-        font-size: 40px;
-        font-weight: bold;
-        margin-bottom: 60px;
-    }
-    .field{
-        display: flex;
-        flex-direction: column;
-        align-items: flex-start;
-        row-gap: 20px;
-    }
-    
-    .form{
-        max-width: 500px;
-        margin: 0 auto;
-    }
 `;
 
 
@@ -91,11 +68,7 @@ const SignUpPage = () => {
         }
     },[errors])
     return (
-        <SignUpPageStyle>
-            <div className='container'>
-                <img src="logo.png" alt="monkey-blogging" className='logo' />
-                <h1 className='heading'>Monkey Blogging</h1>
-            </div>
+        <AuthenticationPage>
             <form onSubmit={handleSubmit(handleSignUp)} className='form'>
                 <Field className='field'>
                     <Label htmlFor="fullname">
@@ -107,10 +80,10 @@ const SignUpPage = () => {
                         placeholder="Enter your fullname"
                         control={control}
                         id="fullname"
+                        autoComplete="off"
                     >
                     </Input>
                 </Field>
-
                 <Field className='field'>
                     <Label htmlFor="email">
                         Email address
@@ -121,6 +94,7 @@ const SignUpPage = () => {
                         placeholder="Enter your email"
                         control={control}
                         id="email"
+                        autoComplete="username"
                     >
                     </Input>
                 </Field>
@@ -134,18 +108,20 @@ const SignUpPage = () => {
                         placeholder="Enter your password"
                         control={control}
                         id="password"
-                        hasIcon
+                        
+                        autoComplete="current-password"
                     >
                         {!togglePassword ? <IconEyeClose onClick={() => { setTogglePassword(true) }} className='input-icon'></IconEyeClose> : <IconEyeOpen onClick={() => { setTogglePassword(false) }} className='input-icon'></IconEyeOpen>}
                     </Input>
                 </Field>
+                <div className='have-account'>You already have an account? <NavLink to={"/sign-in"}>Login</NavLink>{" "}</div>
                 <Button type='submit' style={{
                     maxWidth: 300,
                     margin: "0 auto"
                 }} disabled={isSubmitting} isLoading={isSubmitting}>Sign up</Button>
 
             </form>
-        </SignUpPageStyle>
+        </AuthenticationPage>
     );
 };
 
