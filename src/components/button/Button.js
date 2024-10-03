@@ -1,8 +1,7 @@
 import { LoadingSpinner } from 'components/loading';
-import React, { Children } from 'react';
-import styled from 'styled-components';
 import PropTypes from 'prop-types';
-import { type } from '@testing-library/user-event/dist/type';
+import { NavLink } from 'react-router-dom';
+import styled from 'styled-components';
 const ButtonStyles = styled.button`
     cursor: pointer;
     padding: 25px;
@@ -11,7 +10,8 @@ const ButtonStyles = styled.button`
     border-radius: 8px;
     font-weight: 600;
     font-size: 18px;
-    /* width: 100%; */
+    width: 100%;
+    max-width: 300px;
     height: ${props => props.height || "66px"};
     display: flex;
     justify-content: center;
@@ -25,9 +25,24 @@ const ButtonStyles = styled.button`
     }
 
 `
-const Button = ({type = 'button', onClick = ()=>{}, children , ...props}) => {
-    const {isLoading} = props
+
+/**
+ * @param {*} onClick Handler onClick
+ * @requires
+ * @param {string} type Type of button 'button' | 'submit'
+ */
+const Button = ({type = 'button', onClick = ()=>{}, children ,  ...props}) => {
+    const {isLoading, to} = props
     const child = !!isLoading ? <LoadingSpinner></LoadingSpinner> : children
+    if(to !== "" && typeof to === "string"){
+        return(
+            <NavLink to={to}>
+                 <ButtonStyles type={type} {...props}>
+                    {child}
+                </ButtonStyles>
+            </NavLink>
+        )
+    }
     return (
         <ButtonStyles type={type} onClick={onClick} {...props}>
             {child}

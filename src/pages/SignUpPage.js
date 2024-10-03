@@ -1,8 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import styled from 'styled-components';
 import { Label } from '../components/label';
 import { Input } from '../components/input';
-
 import { useForm } from 'react-hook-form';
 import IconEyeClose from 'components/icon/IconEyeClose';
 import { Field } from 'components/field';
@@ -10,24 +8,20 @@ import { IconEyeOpen } from 'components/icon';
 import { Button } from 'components/button';
 import * as yup from "yup"
 import { yupResolver } from "@hookform/resolvers/yup"
-import { object } from 'prop-types';
 import { toast } from 'react-toastify';
 import {createUserWithEmailAndPassword, updateProfile} from "firebase/auth"
 import { auth, db } from 'firebase-app/firebase-config';
 import { NavLink, useNavigate } from 'react-router-dom';
-import { addDoc, collection } from 'firebase/firestore';
+import { addDoc, collection, doc } from 'firebase/firestore';
 import AuthenticationPage from './AuthenticationPage';
 
-const SignUpPageStyle = styled.div`
-    min-height: 100vh;
-    padding: 40px;
-`;
+
 
 
 const schema = yup.object({
     fullname: yup.string().required("please enter your fullname"),
     email: yup.string().email("please enter valid email").required("please enter your email"),
-    password: yup.string().min(8, "Your password must be at least 8 characters or greater").required("please enter your fullname")
+    password: yup.string().min(6, "Your password must be at least 6 characters or greater").required("please enter your fullname")
 })
 
 const SignUpPage = () => {
@@ -47,7 +41,6 @@ const SignUpPage = () => {
         await updateProfile(auth.currentUser, {
             displayName: values.fullname
         })
-
         const useRef = collection(db , "users")
         addDoc(useRef, {
             fullname: values.fullname,
@@ -59,6 +52,7 @@ const SignUpPage = () => {
     }
     const [togglePassword, setTogglePassword] = useState(false)
     useEffect(()=>{
+        document.title = "Register Page"
         const arrError = Object.values(errors)
         if(arrError.length > 0){
             toast.error(arrError[0]?.message, {

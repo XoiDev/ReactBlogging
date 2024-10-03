@@ -24,7 +24,6 @@ const NotFoundPageStyles = styled.div`
         background-color: ${props => props.theme.primary};
         border-radius: 4px;
         font-weight: 500;
-
     }
 
 `
