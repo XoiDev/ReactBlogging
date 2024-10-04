@@ -66,7 +66,7 @@ const menuLinks = [
 function getLastName(name){
     if(!name) return
     const length = name.split(" ").length
-    return name.split("")[length - 1]
+    return name.split(" ")[length - 1]
 }
 
 const Header = () => {
@@ -97,7 +97,6 @@ const Header = () => {
                                 <path d="M17.0001 15.5237L15.2223 13.9099L14.3334 13.103L12.5557 11.4893" stroke="#999999" strokeWidth="1.5" strokeLinecap="round" />
                                 <path d="M11.6665 12.2964C12.9671 12.1544 13.3706 11.8067 13.4443 10.6826" stroke="#999999" strokeWidth="1.5" strokeLinecap="round" />
                             </svg>
-
                         </span>
                     </div>
                     {!userInfo ? (<Button
@@ -108,7 +107,7 @@ const Header = () => {
                         }} className="header-button"
                     >Sign Up</Button>) : (<div className='header-auth'>
                         <span>Welcomeback, </span>
-                        <strong className='text-primary'>{getLastName(userInfo?.displayName)}</strong>
+                        <strong className='text-primary'>{getLastName(userInfo?.fullname)}</strong>
                     </div>) }
                 </div>
             </div>

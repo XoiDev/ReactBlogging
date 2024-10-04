@@ -18,7 +18,6 @@ const ButtonStyles = styled.button`
     align-items: center;
     background-image: linear-gradient(to right bottom, ${props => props.theme.primary},
     ${props => props.theme.secondary});
-
     &:disabled{
         opacity: 0.5;
         pointer-events: none;

@@ -14,6 +14,7 @@ import { auth, db } from 'firebase-app/firebase-config';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { addDoc, collection, doc } from 'firebase/firestore';
 import AuthenticationPage from './AuthenticationPage';
+import InputPasswordToggle from 'components/input/InputPasswordToggle';
 
 
 
@@ -96,17 +97,7 @@ const SignUpPage = () => {
                     <Label htmlFor="password">
                         Password
                     </Label>
-                    <Input
-                        type={togglePassword ? "text" : "password"}
-                        name="password"
-                        placeholder="Enter your password"
-                        control={control}
-                        id="password"
-                        
-                        autoComplete="current-password"
-                    >
-                        {!togglePassword ? <IconEyeClose onClick={() => { setTogglePassword(true) }} className='input-icon'></IconEyeClose> : <IconEyeOpen onClick={() => { setTogglePassword(false) }} className='input-icon'></IconEyeOpen>}
-                    </Input>
+                    <InputPasswordToggle control={control}></InputPasswordToggle>
                 </Field>
                 <div className='have-account'>You already have an account? <NavLink to={"/sign-in"}>Login</NavLink>{" "}</div>
                 <Button type='submit' style={{

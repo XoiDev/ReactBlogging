@@ -1,19 +1,18 @@
-import { useAuth } from 'contexts/auth-context';
-import React, { useEffect, useState } from 'react';
-import { NavLink, useNavigate } from 'react-router-dom';
-import AuthenticationPage from './AuthenticationPage';
-import { useForm } from 'react-hook-form';
-import { Field } from 'components/field';
-import { Label } from 'components/label';
-import { Input } from 'components/input';
-import { Button } from 'components/button';
-import { IconEyeOpen } from 'components/icon';
-import IconEyeClose from 'components/icon/IconEyeClose';
-import { signInWithEmailAndPassword } from 'firebase/auth';
-import { auth } from 'firebase-app/firebase-config';
-import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
+import { Button } from 'components/button';
+import { Field } from 'components/field';
+import { Input } from 'components/input';
+import InputPasswordToggle from 'components/input/InputPasswordToggle';
+import { Label } from 'components/label';
+import { useAuth } from 'contexts/auth-context';
+import { auth } from 'firebase-app/firebase-config';
+import { signInWithEmailAndPassword } from 'firebase/auth';
+import { useEffect, useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { NavLink, useNavigate } from 'react-router-dom';
 import { toast } from "react-toastify";
+import * as yup from "yup";
+import AuthenticationPage from './AuthenticationPage';
 
 
 
@@ -59,17 +58,7 @@ const SignInPage = () => {
         await signInWithEmailAndPassword(auth, values.email, values.password);
         // setUserInfo(test)
         navigate("/");
-        // console.log(test);
-        
 
-        // const unsubscribe = onAuthStateChanged(auth, (user) => {
-        //     if (user) {
-        //       setUserInfo(user); 
-        //     } else {
-        //       setUserInfo(null); 
-        //     }
-        //   });
-        // return () => unsubscribe();
     }
     return (
         <AuthenticationPage>
@@ -80,8 +69,8 @@ const SignInPage = () => {
                     </Field>
                     <Field>
                         <Label htmlFor='password'>Password</Label>
-                        <Input autoComplete="current-password" name="password" control={control}  type={togglePassword ? "text" : "password"} placeholder="Please enter your password">
-                        {!togglePassword ? <IconEyeClose onClick={() => { setTogglePassword(true) }} className='input-icon'></IconEyeClose> : <IconEyeOpen onClick={() => { setTogglePassword(false) }} className='input-icon'></IconEyeOpen>}</Input>
+                        <InputPasswordToggle control={control}></InputPasswordToggle>
+
                     </Field>
                     <div className='have-account'>You have not had an account? <NavLink to={"/sign-up"}>Register an account</NavLink></div>
                     <Button type='submit' style={{
