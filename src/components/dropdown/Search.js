@@ -1,5 +1,7 @@
+
 import React from "react";
 import { useDropdown } from "./dropdown-context";
+
 const Search = ({ placeholder, ...props }) => {
   const { onChange } = useDropdown();
   return (
@@ -7,11 +9,12 @@ const Search = ({ placeholder, ...props }) => {
       <input
         type="text"
         placeholder={placeholder}
-        className="p-4 outline-none w-full border border-gray-200 rounded"
+        className="w-full p-4 border border-gray-200 rounded outline-none"
         onChange={onChange}
         {...props}
       />
     </div>
   );
 };
+
 export default Search;
