@@ -76,7 +76,7 @@ const sidebarLinks = [
   },
   {
     title: "Category",
-    url: "/manage/category",
+    url: "/manage/add-category",
     icon: (
       <svg
         xmlns="http://www.w3.org/2000/svg"
