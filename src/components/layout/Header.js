@@ -71,7 +71,6 @@ function getLastName(name){
 
 const Header = () => {
     const {userInfo} = useAuth()
-    console.log(userInfo);
     
     return (
         <HeaderStyles>
