@@ -98,7 +98,7 @@ const Header = () => {
                             </svg>
                         </span>
                     </div>
-                    {!userInfo ? (<Button
+                    {/* {!userInfo ? (<Button
                         to="/sign-up"
                         style={{
                             maxWidth: "200px",
@@ -107,7 +107,33 @@ const Header = () => {
                     >Sign Up</Button>) : (<div className='header-auth'>
                         <span>Welcomeback, </span>
                         <strong className='text-primary'>{getLastName(userInfo?.fullname)}</strong>
-                    </div>) }
+                    </div>) } */}
+                    {!userInfo ? (
+            <Button
+              type="button"
+              height="56px"
+              className="header-button"
+              to="/sign-in"
+            >
+              Login
+            </Button>
+          ) : (
+            <div className="flex items-center justify-between header-auth">
+              <Button
+                type="button"
+                height="56px"
+                className="header-button"
+                to="/dashboard"
+              >
+                Dashboard
+              </Button>
+              <div className='ml-2 header-auth'>
+                        <span>Hello, </span>
+                        <strong className='text-primary'>{getLastName(userInfo?.fullname)}</strong>
+                    </div>
+            </div>
+            
+          )}
                 </div>
             </div>
         </HeaderStyles>
