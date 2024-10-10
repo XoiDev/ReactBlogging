@@ -1,6 +1,5 @@
 import DashboardHeading from "module/dashboard/DashboardHeading";
-
-
+import UserTable from "./UserTable";
 
 const UserManage = () => {
   return (
@@ -9,6 +8,7 @@ const UserManage = () => {
         title="Users"
         desc="Manage your user"
       ></DashboardHeading>
+      <UserTable></UserTable>
     </div>
   );
 };

@@ -12,6 +12,8 @@ import PostDetailsPage from "pages/PostDetailsPage";
 import CategoryAddNew from "module/category/CategoryAddNew";
 import CategoryManage from "module/category/CategoryManage";
 import CategoryUpdate from "module/category/CategoryUpdate";
+import UserManage from "module/user/UserManage";
+
 
 function App() {
   return <div>
@@ -52,6 +54,11 @@ function App() {
               path="/manage/category"
               element={<CategoryManage></CategoryManage>}
             ></Route>
+             <Route
+              path="/manage/user"
+              element={<UserManage></UserManage>}
+            ></Route>
+
           </Route>
       </Routes>
     </AuthProvider>
