@@ -10,18 +10,21 @@ import { Radio } from "components/checkbox";
 import { postStatus } from "utils/constants";
 import { Label } from "components/label";
 import { Input } from "components/input";
-import { Field } from "components/field";
+import { Field, FieldCheckboxes } from "components/field";
 import { Dropdown } from "components/dropdown";
 import { db } from "firebase-app/firebase-config";
 import { Button } from "components/button";
 import {
   addDoc,
   collection,
+  doc,
+  getDoc,
   getDocs,
   query,
   serverTimestamp,
   where,
 } from "firebase/firestore";
+import DashboardHeading from "module/dashboard/DashboardHeading";
 
 const PostAddNew = () => {
   const { userInfo } = useAuth();
@@ -31,9 +34,10 @@ const PostAddNew = () => {
       title: "",
       slug: "",
       status: 2,
-      categoryId: "",
       hot: false,
       image: "",
+      category: {},
+      user: {},
     },
   });
   const watchStatus = watch("status");
@@ -48,6 +52,24 @@ const PostAddNew = () => {
   const [categories, setCategories] = useState([]);
   const [selectCategory, setSelectCategory] = useState("");
   const [loading, setLoading] = useState(false);
+  useEffect(() => {
+    async function fetchUserData() {
+      if (!userInfo.email) return;
+      const q = query(
+        collection(db, "users"),
+        where("email", "==", userInfo.email)
+      );
+      const querySnapshot = await getDocs(q);
+      querySnapshot.forEach((doc) => {
+        setValue("user", {
+          id: doc.id,
+          ...doc.data(),
+        });
+      });
+    }
+    fetchUserData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [userInfo.email]);
   const addPostHandler = async (values) => {
     setLoading(true);
     try {
@@ -58,7 +80,6 @@ const PostAddNew = () => {
       await addDoc(colRef, {
         ...cloneValues,
         image,
-        userId: userInfo.uid,
         createdAt: serverTimestamp(),
       });
       toast.success("Create new post successfully!");
@@ -66,16 +87,15 @@ const PostAddNew = () => {
         title: "",
         slug: "",
         status: 2,
-        categoryId: "",
+        category: {},
         hot: false,
         image: "",
+        user: {},
       });
       handleResetUpload();
       setSelectCategory({});
     } catch (error) {
       setLoading(false);
-      console.log(error);
-      
     } finally {
       setLoading(false);
     }
@@ -102,17 +122,21 @@ const PostAddNew = () => {
     document.title = "Monkey Blogging - Add new post";
   }, []);
 
-  const handleClickOption = (item) => {
-    setValue("categoryId", item.id);
+  const handleClickOption = async (item) => {
+    const colRef = doc(db, "categories", item.id);
+    const docData = await getDoc(colRef);
+    setValue("category", {
+      id: docData.id,
+      ...docData.data(),
+    });
     setSelectCategory(item);
   };
 
   return (
     <>
-      <h1 className="dashboard-heading">Add post</h1>
-      <p className="dashboard-short-desc">Add new post</p>
+      <DashboardHeading title="Add post" desc="Add new post"></DashboardHeading>
       <form onSubmit={handleSubmit(addPostHandler)}>
-        <div className="grid grid-cols-2 mb-10 gap-x-10">
+        <div className="form-layout">
           <Field>
             <Label>Title</Label>
             <Input
@@ -131,7 +155,7 @@ const PostAddNew = () => {
             ></Input>
           </Field>
         </div>
-        <div className="grid grid-cols-2 mb-10 gap-x-10">
+        <div className="form-layout">
           <Field>
             <Label>Image</Label>
             <ImageUpload
@@ -159,13 +183,13 @@ const PostAddNew = () => {
               </Dropdown.List>
             </Dropdown>
             {selectCategory?.name && (
-              <span className="inline-block p-3 text-sm font-medium text-green-600 bg-green-200 rounded-lg">
+              <span className="inline-block p-3 text-sm font-medium text-green-600 rounded-lg bg-green-50">
                 {selectCategory?.name}
               </span>
             )}
           </Field>
         </div>
-        <div className="grid grid-cols-2 mb-10 gap-x-10">
+        <div className="form-layout">
           <Field>
             <Label>Feature post</Label>
             <Toggle
@@ -175,7 +199,7 @@ const PostAddNew = () => {
           </Field>
           <Field>
             <Label>Status</Label>
-            <div className="flex items-center gap-x-5">
+            <FieldCheckboxes>
               <Radio
                 name="status"
                 control={control}
@@ -200,7 +224,7 @@ const PostAddNew = () => {
               >
                 Reject
               </Radio>
-            </div>
+            </FieldCheckboxes>
           </Field>
         </div>
         <Button
