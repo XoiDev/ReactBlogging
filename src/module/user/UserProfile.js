@@ -1,10 +1,11 @@
 import ImageUpload from "components/image/ImageUpload";
-import DashboardHeading from "./DashboardHeading";
+
 import { Field } from "components/field";
 import { Label } from "components/label";
 import { Input } from "components/input";
 import { useForm } from "react-hook-form";
 import { Button } from "components/button";
+import DashboardHeading from "module/dashboard/DashboardHeading";
 
 
 const UserProfile = () => {

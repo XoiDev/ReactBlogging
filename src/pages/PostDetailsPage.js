@@ -1,16 +1,17 @@
-import Heading from "components/layout/Heading";
+import styled from "styled-components";
+import React, { useEffect, useState } from "react";
+import PostRelated from "module/post/PostRelated";
+import PostMeta from "module/post/PostMeta";
+import PostImage from "module/post/PostImage";
+import PostCategory from "module/post/PostCategory";
+import PageNotFound from "./PageNotFound";
 import Layout from "components/layout/Layout";
+import { Link, useParams } from "react-router-dom";
 import { db } from "firebase-app/firebase-config";
 import { collection, onSnapshot, query, where } from "firebase/firestore";
-import PostCategory from "module/post/PostCategory";
-import PostImage from "module/post/PostImage";
-import PostItem from "module/post/PostItem";
-import PostMeta from "module/post/PostMeta";
-import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
-import styled from "styled-components";
-import PageNotFound from "./PageNotFound";
-import parse from "html-react-parser";
+import { useAuth } from "contexts/auth-context";
+import { userRole } from "utils/constants";
+import AuthorBox from "components/author/AuthorBox";
 const PostDetailsPageStyles = styled.div`
   padding-bottom: 100px;
   .post {
@@ -107,13 +108,22 @@ const PostDetailsPage = () => {
       const colRef = query(collection(db, "posts"), where("slug", "==", slug));
       onSnapshot(colRef, (snapshot) => {
         snapshot.forEach((doc) => {
-          doc.data() && setPostInfo(doc.data());
+          doc.data() &&
+            setPostInfo({
+              id: doc.id,
+              ...doc.data(),
+            });
         });
       });
     }
     fetchData();
   }, [slug]);
-  if (!slug || !postInfo.title) return <PageNotFound></PageNotFound>;
+  useEffect(() => {
+    document.body.scrollIntoView({ behavior: "smooth", block: "start" });
+  }, [slug]);
+  const { userInfo } = useAuth();
+  if (!slug) return <PageNotFound></PageNotFound>;
+  if (!postInfo.title) return null;
   const { user } = postInfo;
   return (
     <PostDetailsPageStyles>
@@ -125,34 +135,33 @@ const PostDetailsPage = () => {
               className="post-feature"
             ></PostImage>
             <div className="post-info">
-              <PostCategory className="mb-6">
+              <PostCategory className="mb-6" to={postInfo.category?.slug}>
                 {postInfo.category?.name}
               </PostCategory>
               <h1 className="post-heading">{postInfo.title}</h1>
               <PostMeta></PostMeta>
+              {/* Check if user role is ADMIN then can edit the post */}
+              {userInfo?.role === userRole.ADMIN && (
+                <Link
+                  to={`/manage/update-post?id=${postInfo.id}`}
+                  className="inline-block px-4 py-2 mt-5 text-sm border border-gray-400 rounded-md"
+                >
+                  Edit post
+                </Link>
+              )}
             </div>
           </div>
           <div className="post-content">
-            <div className="entry-content">{parse(postInfo.content || "")}</div>
-            <div className="author">
-              <div className="author-image">
-                <img src={user?.avatar} alt="" />
-              </div>
-              <div className="author-content">
-                <h3 className="author-name">{user?.fullname}</h3>
-                <p className="author-desc">{user?.description}</p>
-              </div>
-            </div>
+            <div
+              className="entry-content"
+              // Prevent XSS Attack recommen from React Docs
+              dangerouslySetInnerHTML={{
+                __html: postInfo.content || "",
+              }}
+            ></div>
+            <AuthorBox userId={user.id}></AuthorBox>
           </div>
-          <div className="post-related">
-            <Heading>Bài viết liên quan</Heading>
-            <div className="grid-layout grid-layout--primary">
-              <PostItem></PostItem>
-              <PostItem></PostItem>
-              <PostItem></PostItem>
-              <PostItem></PostItem>
-            </div>
-          </div>
+          <PostRelated categoryId={postInfo?.category?.id}></PostRelated>
         </div>
       </Layout>
     </PostDetailsPageStyles>
