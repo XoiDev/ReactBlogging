@@ -3,7 +3,7 @@ import { AuthProvider } from "./contexts/auth-context";
 import SignUpPage from "./pages/SignUpPage";
 import SignInPage from "pages/SignInPage";
 import Homepage from "pages/Homepage";
-import NotFoundPage from "pages/NotFoundPage";
+import NotFoundPage from "pages/PageNotFound";
 import DashboardLayout from "module/dashboard/DashboardLayout";
 import DashboardPage from "pages/DashboardPage";
 import PostManage from "module/post/PostManage";
@@ -15,6 +15,7 @@ import CategoryUpdate from "module/category/CategoryUpdate";
 import UserManage from "module/user/UserManage";
 import UserAddNew from "module/user/UserAddNew";
 import UserUpdate from "module/user/UserUpdate";
+import PostUpdate from "module/post/PostUpdate";
 
 
 function App() {
@@ -43,6 +44,10 @@ function App() {
             <Route
               path="/manage/add-post"
               element={<PostAddNew></PostAddNew>}
+            ></Route>
+             <Route
+              path="/manage/update-post"
+              element={<PostUpdate></PostUpdate>}
             ></Route>
              <Route
               path="/manage/add-category"

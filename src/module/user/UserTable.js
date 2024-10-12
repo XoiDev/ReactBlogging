@@ -132,6 +132,7 @@ const UserTable = () => {
           {userList.length > 0 && userList.map((user) => renderUserItem(user))}
         </tbody>
       </Table>
+      
     </div>
   );
 };
